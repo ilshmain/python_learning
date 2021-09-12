@@ -63,48 +63,60 @@ while k < i:
 # который обрабатывает строковые данные и выводит сообщение о том,
 # надежен ли пароль или нет. В случае, если пароль не надежен,
 # код должен выдавать рекомендации для усиления надежности пароля.
+# 1) Входные данные: 'qwerty'.
+#     Выходные данные: 'Слабый пароль. Рекомендации: увеличить число символов - 6, добавить 1 заглавную букву,
+#     добавить 1 цифру, добавить 1 спецсимвол '
+# 2) Входные данные: 'Qwert_Y'.
+#      Выходные данные: 'Ошибка. Запрещенный спецсимвол'
+# 3) Входные данные: 'Q123wer123tY'.
+#      Выходные данные: 'Слабый пароль. Рекомендации: добавить 1 спецсимвол'
+# 4) Входные данные: '@PowerRangers123@'.
+#      Выходные данные: 'Сильный пароль.'
 
 s = str(input())
-i = len(s)
 
+ascii_lowercase = 'abcdefghijklmnopqrstuvwxyz'
+ascii_uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 numb_in_str = '1234567890'
-spec_symb = '!@#$%^&*()-+'
-sum_simb = ''
-last_line = ''
+spec_symbol = '!@#$%^&*()-+'
 
-s_low = s.islower()
-s_high = s.isupper()
-if i < 12:
-    i = 12 - i
-    sum_simb = ('увеличить число символов на ' + str(i) + ', ')
-i = len(spec_symb) - 1
-while i >= 0:
-    if s.find(spec_symb[i]) > 0:
-        res_spec_symb = 'True'
-        break
-    else:
-        res_spec_symb = 'False'
-    i -= 1
-i = len(numb_in_str) - 1
-while i >= 0:
-    if s.find(numb_in_str[i]) > 0:
-        res_numb_in_str = 'True'
-        break
-    else:
-        res_numb_in_str = 'False'
-    i -= 1
-if (sum_simb != '') | (res_spec_symb == 'False') | (res_numb_in_str == 'False') | (not(s_low)) | (not(s_low)):
-    last_line = 'Слабый пароль. Рекомендации: '
-if sum_simb != '':
-    last_line = last_line + sum_simb
-if not(s_low):
-    last_line = last_line + 'добавить 1 строчную букву, '
-if not (s_high):
+k = 0
+i = len(s)
+res_spec_symbol = -1
+res_numb_in_str = -1
+low_symbol = -1
+high_symbol = -1
+last_line = 'Слабый пароль. Рекомендации: '
+all_symbol = ascii_uppercase + ascii_lowercase + numb_in_str + spec_symbol
+
+while k < len(s):
+    flag = all_symbol.find(s[k])
+    if flag == -1:
+        print('Ошибка. Запрещенный спецсимвол')
+        exit(0)
+    if (i < 12) & (k == 0):
+        i = 12 - i
+        last_line = last_line + 'увеличить число символов на ' + str(i) + ', '
+    if high_symbol == -1:
+        high_symbol = ascii_uppercase.find(s[k])
+    if low_symbol == -1:
+        low_symbol = ascii_lowercase.find(s[k])
+    if res_spec_symbol == -1:
+        res_spec_symbol = spec_symbol.find(s[k])
+    if res_numb_in_str == -1:
+        res_numb_in_str = numb_in_str.find(s[k])
+    k += 1
+if high_symbol == -1:
     last_line = last_line + 'добавить 1 заглавную букву, '
-if res_numb_in_str == 'False':
+if low_symbol == -1:
+    last_line = last_line + 'добавить 1 строчную букву, '
+if res_numb_in_str == -1:
     last_line = last_line + 'добавить 1 цифру, '
-if res_spec_symb == 'False':
+if res_spec_symbol == -1:
     last_line = last_line + 'добавить 1 спецсимвол, '
-i = len(last_line) - 2
-last_line = last_line[:i] + '.'
+if last_line != 'Слабый пароль. Рекомендации: ':
+    i = len(last_line) - 2
+    last_line = last_line[:i] + '.'
+else:
+    last_line = 'Сильный пароль.'
 print(last_line)
